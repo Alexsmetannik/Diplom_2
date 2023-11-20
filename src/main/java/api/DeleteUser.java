@@ -10,12 +10,13 @@ public class DeleteUser {
     private static final String pathDelete = "/api/auth/user";
 
     @Step("Delete user")
-    public ValidatableResponse deleteUser() {
+    public ValidatableResponse deleteUserRequest(String token) {
         return given()
                 //  .log().all()
+                .auth().oauth2(token)
                 .when()
                 .delete(baseURL + pathDelete)
                 .then();
-                //  .log().all()
+                 // .log().all();
     }
 }

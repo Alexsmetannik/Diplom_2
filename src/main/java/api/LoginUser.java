@@ -27,12 +27,12 @@ public class LoginUser {
     @Step("Login user")
     public ValidatableResponse loginUserRequest(LoginUser loginUser) {
         return given()
-                  .log().all()
+                // .log().all()
                 .contentType(ContentType.JSON)
                 .body(loginUser)
                 .when()
                 .post(baseURL + pathLogin)
-                .then()
-                  .log().all();
+                .then();
+                //  .log().all();
     }
 }

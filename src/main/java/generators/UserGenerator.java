@@ -14,4 +14,6 @@ public class UserGenerator {
         String name = faker.name().firstName();
         return new CreateUser(email, password, name);
     }
+
+
 }

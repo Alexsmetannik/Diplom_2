@@ -49,12 +49,12 @@ public class CreateUser {
     @Step("Create user")
     public ValidatableResponse createUserRequest(CreateUser createUser) {
         return given()
-                  .log().all()
+                 // .log().all()
                 .contentType(ContentType.JSON)
                 .body(createUser)
                 .when()
                 .post(baseURL + pathCreate)
-                .then()
-                  .log().all();
+                .then();
+                //  .log().all();
     }
 }
