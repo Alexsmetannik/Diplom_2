@@ -21,12 +21,12 @@ public class CreateOrder {
     @Step("Create order")
     public ValidatableResponse createOrder(CreateOrder createOrder) {
         return given()
-                //  .log().all()
+                  .log().all()
                 .contentType(ContentType.JSON)
                 .body(createOrder)
                 .when()
                 .post(baseURL + pathCreate)
-                .then();
-                //  .log().all()
+                .then()
+                  .log().all();
     }
 }

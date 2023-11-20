@@ -26,6 +26,10 @@ public class LoginUserTest {
         createUser = new CreateUser();
         user = UserGenerator.getSuccessCreateUser();
         loginUser = new LoginUser();
+
+        ValidatableResponse responseCreate = createUser.createUserRequest(user);
+        bearerToken = responseCreate.extract().path("accessToken");
+        token = bearerToken.substring(7);
     }
 
     @After
@@ -40,10 +44,6 @@ public class LoginUserTest {
     @DisplayName("Check to login an existing user")
     @Description("логин под существующим пользователем")
     public void loginExistingUserTest(){
-        ValidatableResponse responseCreate = createUser.createUserRequest(user);
-        bearerToken = responseCreate.extract().path("accessToken");
-        token = bearerToken.substring(7);
-
         ValidatableResponse responseLogin = loginUser.loginUserRequest(loginUser.from(user));
         int actualStatusCode = responseLogin.extract().statusCode();
         Boolean isUserlogged = responseLogin.extract().path("success");
@@ -55,10 +55,6 @@ public class LoginUserTest {
     @DisplayName("Check to login a user with invalid Email")
     @Description("логин с неверным логином")
     public void loginWithInvalidEmailTest(){
-        ValidatableResponse responseCreate = createUser.createUserRequest(user);
-        bearerToken = responseCreate.extract().path("accessToken");
-        token = bearerToken.substring(7);
-
         user.setEmail("1234");
         ValidatableResponse responseLogin = loginUser.loginUserRequest(loginUser.from(user));
         int actualStatusCode = responseLogin.extract().statusCode();
@@ -71,10 +67,6 @@ public class LoginUserTest {
     @DisplayName("Check to login a user with invalid Password")
     @Description("логин с неверным паролем")
     public void loginWithInvalidPasswordTest(){
-        ValidatableResponse responseCreate = createUser.createUserRequest(user);
-        bearerToken = responseCreate.extract().path("accessToken");
-        token = bearerToken.substring(7);
-
         user.setPassword("1234");
         ValidatableResponse responseLogin = loginUser.loginUserRequest(loginUser.from(user));
         int actualStatusCode = responseLogin.extract().statusCode();

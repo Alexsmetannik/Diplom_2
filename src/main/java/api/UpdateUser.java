@@ -22,15 +22,20 @@ public class UpdateUser {
     public UpdateUser() {
     }
 
-    @Step("Create user")
-    public ValidatableResponse updateUser(UpdateUser updateUser) {
+    public static UpdateUser from (CreateUser createUser) {
+        return new UpdateUser(createUser.getEmail(), createUser.getPassword(), createUser.getName());
+    }
+
+    @Step("Update user")
+    public ValidatableResponse updateUserRequest(UpdateUser updateUser, String token) {
         return given()
-                //  .log().all()
+                 // .log().all()
+                .auth().oauth2(token)
                 .contentType(ContentType.JSON)
                 .body(updateUser)
                 .when()
                 .patch(baseURL + pathUpdate)
                 .then();
-                //  .log().all()
+                // .log().all();
     }
 }

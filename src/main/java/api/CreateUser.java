@@ -55,6 +55,6 @@ public class CreateUser {
                 .when()
                 .post(baseURL + pathCreate)
                 .then();
-                //  .log().all();
+                 //.log().all();
     }
 }
