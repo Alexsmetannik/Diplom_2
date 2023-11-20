@@ -1,5 +1,6 @@
 package api;
 
+import data.ListIngredient;
 import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
@@ -9,24 +10,17 @@ import static io.restassured.RestAssured.given;
 
 public class CreateOrder {
     private static final String pathCreate = "/api/orders";
-    public String[] ingredients;
-
-    public CreateOrder (String[] ingredients){
-        this.ingredients = ingredients;
-    }
-
-    public CreateOrder() {
-    }
 
     @Step("Create order")
-    public ValidatableResponse createOrder(CreateOrder createOrder) {
+    public ValidatableResponse createOrderRequest(ListIngredient listIngredient, String token) {
         return given()
-                  .log().all()
+                 // .log().all()
+                .auth().oauth2(token)
                 .contentType(ContentType.JSON)
-                .body(createOrder)
+                .body(listIngredient)
                 .when()
                 .post(baseURL + pathCreate)
-                .then()
-                  .log().all();
+                .then();
+                 // .log().all();
     }
 }
