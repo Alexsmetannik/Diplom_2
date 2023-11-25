@@ -15,35 +15,34 @@ import static org.apache.http.HttpStatus.*;
 import static org.junit.Assert.*;
 
 public class CreateOrderTest {
-    private CreateUser createUser;
-    private CreateUser user;
-    private LoginUser loginUser;
-    private DeleteUser deleteUser;
-    private GetIngredients getIngredients;
-    private CreateOrder createOrder;
+    private UserClient userClient;
+    private User user;
+    private LoginUser login;
+    private IngredientClient getIngredients;
+    private OrderClient orderClient;
     private String token;
     private String bearerToken;
 
     @Before
     public void beforeCreateUserTest(){
-        createUser = new CreateUser();
+        userClient = new UserClient();
         user = UserGenerator.getSuccessCreateUser();
-        loginUser = new LoginUser();
-        getIngredients = new GetIngredients();
-        createOrder = new CreateOrder();
+        login = new LoginUser();
 
-        ValidatableResponse responseCreate = createUser.createUserRequest(user);
+        getIngredients = new IngredientClient();
+        orderClient = new OrderClient();
+
+        ValidatableResponse responseCreate = userClient.createUserRequest(user);
         bearerToken = responseCreate.extract().path("accessToken");
         token = bearerToken.substring(7);
 
-        loginUser.loginUserRequest(loginUser.from(user));
+        userClient.loginUserRequest(login.from(user));
     }
 
     @After
     public void deleteUser() {
-        deleteUser = new DeleteUser();
         if(token != null){
-            deleteUser.deleteUserRequest(token);
+            userClient.deleteUserRequest(token);
         }
     }
 
@@ -62,7 +61,7 @@ public class CreateOrderTest {
         }
         ListIngredient listIngredient = new ListIngredient(listIngredients);
 
-        ValidatableResponse responseCreateOrder = createOrder.createOrderRequest(listIngredient,"");
+        ValidatableResponse responseCreateOrder = orderClient.createOrderRequest(listIngredient,"");
         int actualStatusCode = responseCreateOrder.extract().statusCode();
         Boolean isOrderCreated = responseCreateOrder.extract().path("success");
         assertEquals("StatusCode is not 200", SC_OK, actualStatusCode);
@@ -84,7 +83,7 @@ public class CreateOrderTest {
         }
         ListIngredient listIngredient = new ListIngredient(listIngredients);
 
-        ValidatableResponse responseCreateOrder = createOrder.createOrderRequest(listIngredient,token);
+        ValidatableResponse responseCreateOrder = orderClient.createOrderRequest(listIngredient,token);
         int actualStatusCode = responseCreateOrder.extract().statusCode();
         Boolean isOrderCreated = responseCreateOrder.extract().path("success");
         assertEquals("StatusCode is not 200", SC_OK, actualStatusCode);
@@ -98,7 +97,7 @@ public class CreateOrderTest {
         ArrayList<String> listString = new ArrayList<>();
         ListIngredient listIngredient = new ListIngredient(listString);
 
-        ValidatableResponse responseCreateOrder = createOrder.createOrderRequest(listIngredient,token);
+        ValidatableResponse responseCreateOrder = orderClient.createOrderRequest(listIngredient,token);
         int actualStatusCode = responseCreateOrder.extract().statusCode();
         Boolean isOrderCreated = responseCreateOrder.extract().path("success");
         assertEquals("StatusCode is not 400", SC_BAD_REQUEST, actualStatusCode);
@@ -121,7 +120,7 @@ public class CreateOrderTest {
         }
         ListIngredient listIngredient = new ListIngredient(listIngredients);
 
-        ValidatableResponse responseCreateOrder = createOrder.createOrderRequest(listIngredient,token);
+        ValidatableResponse responseCreateOrder = orderClient.createOrderRequest(listIngredient,token);
         int actualStatusCode = responseCreateOrder.extract().statusCode();
         assertEquals("StatusCode is not 500", SC_INTERNAL_SERVER_ERROR, actualStatusCode);
     }

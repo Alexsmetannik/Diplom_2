@@ -1,7 +1,4 @@
-import api.CreateUser;
-import api.DeleteUser;
-import api.LoginUser;
-import api.UpdateUser;
+import api.*;
 import generators.UserGenerator;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
@@ -14,11 +11,9 @@ import static org.apache.http.HttpStatus.*;
 import static org.junit.Assert.*;
 
 public class UpdateUserTest {
-    private CreateUser createUser;
-    private CreateUser user;
-    private LoginUser loginUser;
-    private DeleteUser deleteUser;
-    private UpdateUser updateUser;
+    private UserClient userClient;
+    private User user;
+    private LoginUser login;
     private String token;
     private String bearerToken;
     private String newEmail;
@@ -28,26 +23,24 @@ public class UpdateUserTest {
 
     @Before
     public void beforeCreateUserTest(){
-        createUser = new CreateUser();
+        userClient = new UserClient();
         user = UserGenerator.getSuccessCreateUser();
-        loginUser = new LoginUser();
-        updateUser = new UpdateUser();
+        login = new LoginUser();
         newEmail = UserGenerator.getNewEmail();
         newPassword = UserGenerator.getNewPassword();
         newName = UserGenerator.getNewName();
 
-        ValidatableResponse responseCreate = createUser.createUserRequest(user);
+        ValidatableResponse responseCreate = userClient.createUserRequest(user);
         bearerToken = responseCreate.extract().path("accessToken");
         token = bearerToken.substring(7);
 
-        loginUser.loginUserRequest(loginUser.from(user));
+        userClient.loginUserRequest(login.from(user));
     }
 
     @After
     public void deleteUser() {
-        deleteUser = new DeleteUser();
         if(token != null){
-            deleteUser.deleteUserRequest(token);
+            userClient.deleteUserRequest(token);
         }
     }
 
@@ -56,7 +49,7 @@ public class UpdateUserTest {
     @Description("Изменение данных пользователя с авторизацией (Email)")
     public void updateUserEmailWithLoginTest(){
         user.setEmail(newEmail);
-        ValidatableResponse responseUpdate = updateUser.updateUserRequest(updateUser.from(user), token);
+        ValidatableResponse responseUpdate = userClient.updateUserRequest(user, token);
         int actualStatusCode = responseUpdate.extract().statusCode();
         Boolean isUserUpdated = responseUpdate.extract().path("success");
         String actualResponce = (responseUpdate.extract().path("user")).toString();
@@ -71,7 +64,7 @@ public class UpdateUserTest {
     @Description("Изменение данных пользователя с авторизацией (Name)")
     public void updateUserNameWithLoginTest(){
         user.setName(newName);
-        ValidatableResponse responseUpdate = updateUser.updateUserRequest(updateUser.from(user), token);
+        ValidatableResponse responseUpdate = userClient.updateUserRequest(user, token);
         int actualStatusCode = responseUpdate.extract().statusCode();
         Boolean isUserUpdated = responseUpdate.extract().path("success");
         String actualResponce = (responseUpdate.extract().path("user")).toString();
@@ -86,13 +79,13 @@ public class UpdateUserTest {
     @Description("Изменение данных пользователя с авторизацией (Password)")
     public void updateUserPasswordWithLoginTest(){
         user.setPassword(newPassword);
-        ValidatableResponse responseUpdate = updateUser.updateUserRequest(updateUser.from(user), token);
+        ValidatableResponse responseUpdate = userClient.updateUserRequest(user, token);
         int actualStatusCode = responseUpdate.extract().statusCode();
         Boolean isUserUpdated = responseUpdate.extract().path("success");
         assertEquals("StatusCode is not 200", SC_OK, actualStatusCode);
         assertTrue("User is not login", isUserUpdated);
 
-        ValidatableResponse responseSecondLogin = loginUser.loginUserRequest(loginUser.from(user));
+        ValidatableResponse responseSecondLogin = userClient.loginUserRequest(login.from(user));
         Boolean isUserSecondlogged = responseSecondLogin.extract().path("success");
         assertTrue("User is not login", isUserSecondlogged);
     }
@@ -102,7 +95,7 @@ public class UpdateUserTest {
     @Description("Изменение данных пользователя без авторизации (Email)")
     public void updateUserEmailWithoutLoginTest(){
         user.setEmail(newEmail);
-        ValidatableResponse responseUpdate = updateUser.updateUserRequest(updateUser.from(user), "");
+        ValidatableResponse responseUpdate = userClient.updateUserRequest(user, "");
         int actualStatusCode = responseUpdate.extract().statusCode();
         String actualMessage = responseUpdate.extract().path("message");
         assertEquals("StatusCode is not 403", SC_UNAUTHORIZED, actualStatusCode);
@@ -114,7 +107,7 @@ public class UpdateUserTest {
     @Description("Изменение данных пользователя без авторизации (Name)")
     public void updateUserNameWithoutLoginTest(){
         user.setName(newName);
-        ValidatableResponse responseUpdate = updateUser.updateUserRequest(updateUser.from(user), "");
+        ValidatableResponse responseUpdate = userClient.updateUserRequest(user, "");
         int actualStatusCode = responseUpdate.extract().statusCode();
         String actualMessage = responseUpdate.extract().path("message");
         assertEquals("StatusCode is not 403", SC_UNAUTHORIZED, actualStatusCode);
@@ -126,7 +119,7 @@ public class UpdateUserTest {
     @Description("Изменение данных пользователя без авторизации (Password)")
     public void updateUserPasswordWithoutLoginTest(){
         user.setPassword(newPassword);
-        ValidatableResponse responseUpdate = updateUser.updateUserRequest(updateUser.from(user), "");
+        ValidatableResponse responseUpdate = userClient.updateUserRequest(user, "");
         int actualStatusCode = responseUpdate.extract().statusCode();
         String actualMessage = responseUpdate.extract().path("message");
         assertEquals("StatusCode is not 403", SC_UNAUTHORIZED, actualStatusCode);

@@ -8,19 +8,26 @@ import io.restassured.response.ValidatableResponse;
 import static config.Enviroment.BASE_URL;
 import static io.restassured.RestAssured.given;
 
-public class CreateOrder {
-    private static final String PATH_CREATE = "/api/orders";
+public class OrderClient {
+    private static final String PATH_ORDERS = "/api/orders";
 
     @Step("Create order")
     public ValidatableResponse createOrderRequest(ListIngredient listIngredient, String token) {
         return given()
-                 // .log().all()
                 .auth().oauth2(token)
                 .contentType(ContentType.JSON)
                 .body(listIngredient)
                 .when()
-                .post(BASE_URL + PATH_CREATE)
+                .post(BASE_URL + PATH_ORDERS)
                 .then();
-                 // .log().all();
+    }
+
+    @Step("Get orders by user")
+    public ValidatableResponse getOrdersByUserRequest(String token) {
+        return given()
+                .auth().oauth2(token)
+                .when()
+                .get(BASE_URL + PATH_ORDERS)
+                .then();
     }
 }

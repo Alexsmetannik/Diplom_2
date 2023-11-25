@@ -15,31 +15,29 @@ import static org.apache.http.HttpStatus.*;
 import static org.junit.Assert.*;
 
 public class GetOrdersUserTest {
-    private CreateUser createUser;
-    private CreateUser user;
-    private LoginUser loginUser;
-    private DeleteUser deleteUser;
-    private GetIngredients getIngredients;
-    private CreateOrder createOrder;
-    private GetOrdersByUser getOrdersByUser;
+    private UserClient userClient;
+    private User user;
+    private LoginUser login;
+    private IngredientClient getIngredients;
+    private OrderClient orderClient;
     private String token;
     private String bearerToken;
     private final static String ERROR_MESSAGE_NOT_AUTHORISED = "You should be authorised";
 
     @Before
     public void beforeCreateUserTest(){
-        createUser = new CreateUser();
+        userClient = new UserClient();
         user = UserGenerator.getSuccessCreateUser();
-        loginUser = new LoginUser();
-        getIngredients = new GetIngredients();
-        createOrder = new CreateOrder();
-        getOrdersByUser = new GetOrdersByUser();
+        login = new LoginUser();
 
-        ValidatableResponse responseCreate = createUser.createUserRequest(user);
+        getIngredients = new IngredientClient();
+        orderClient = new OrderClient();
+
+        ValidatableResponse responseCreate = userClient.createUserRequest(user);
         bearerToken = responseCreate.extract().path("accessToken");
         token = bearerToken.substring(7);
 
-        loginUser.loginUserRequest(loginUser.from(user));
+        userClient.loginUserRequest(login.from(user));
 
         ValidatableResponse responseIngredients = getIngredients.getIngredientsRequest();
         Ingredient ingredient = responseIngredients.extract().body().as(Ingredient.class);
@@ -52,14 +50,13 @@ public class GetOrdersUserTest {
         }
         ListIngredient listIngredient = new ListIngredient(listIngredients);
 
-        createOrder.createOrderRequest(listIngredient,token);
+        orderClient.createOrderRequest(listIngredient,token);
     }
 
     @After
     public void deleteUser() {
-        deleteUser = new DeleteUser();
         if(token != null){
-            deleteUser.deleteUserRequest(token);
+            userClient.deleteUserRequest(token);
         }
     }
 
@@ -67,7 +64,7 @@ public class GetOrdersUserTest {
     @DisplayName("Check to get orders by user with login")
     @Description("Получение заказов конкретного пользователя с авторизацией")
     public void getOrdersUserWithLoginTest() {
-        ValidatableResponse responseGetOrdersByUser = getOrdersByUser.getOrdersByUserRequest(token);
+        ValidatableResponse responseGetOrdersByUser = orderClient.getOrdersByUserRequest(token);
         int actualStatusCode = responseGetOrdersByUser.extract().statusCode();
         Boolean isOrdersGet  = responseGetOrdersByUser.extract().path("success");
         assertEquals("StatusCode is not 200", SC_OK, actualStatusCode);
@@ -78,7 +75,7 @@ public class GetOrdersUserTest {
     @DisplayName("Check to get orders by user without login")
     @Description("Получение заказов конкретного пользователя без авторизации")
     public void getOrdersUserWithoutLoginTest() {
-        ValidatableResponse responseGetOrdersByUser = getOrdersByUser.getOrdersByUserRequest("");
+        ValidatableResponse responseGetOrdersByUser = orderClient.getOrdersByUserRequest("");
         int actualStatusCode = responseGetOrdersByUser.extract().statusCode();
         String actualMessage = responseGetOrdersByUser.extract().path("message");
         assertEquals("StatusCode is not 401", SC_UNAUTHORIZED, actualStatusCode);
