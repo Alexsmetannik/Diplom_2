@@ -19,7 +19,7 @@ public class LoginUserTest {
     private DeleteUser deleteUser;
     private String token;
     private String bearerToken;
-    private final static String errorMessageIncorrectField = "email or password are incorrect";
+    private final static String ERROR_MESSAGE_INCORRECT_FIELD = "email or password are incorrect";
 
     @Before
     public void beforeCreateUserTest(){
@@ -60,7 +60,7 @@ public class LoginUserTest {
         int actualStatusCode = responseLogin.extract().statusCode();
         String actualMessage = responseLogin.extract().path("message");
         assertEquals("StatusCode is not 403", SC_UNAUTHORIZED, actualStatusCode);
-        assertEquals("Message is not correct", errorMessageIncorrectField, actualMessage);
+        assertEquals("Message is not correct", ERROR_MESSAGE_INCORRECT_FIELD, actualMessage);
     }
 
     @Test
@@ -72,6 +72,6 @@ public class LoginUserTest {
         int actualStatusCode = responseLogin.extract().statusCode();
         String actualMessage = responseLogin.extract().path("message");
         assertEquals("StatusCode is not 403", SC_UNAUTHORIZED, actualStatusCode);
-        assertEquals("Message is not correct", errorMessageIncorrectField, actualMessage);
+        assertEquals("Message is not correct", ERROR_MESSAGE_INCORRECT_FIELD, actualMessage);
     }
 }

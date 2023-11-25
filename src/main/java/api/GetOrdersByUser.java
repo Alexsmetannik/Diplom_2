@@ -3,11 +3,11 @@ package api;
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
 
-import static config.Enviroment.baseURL;
+import static config.Enviroment.BASE_URL;
 import static io.restassured.RestAssured.given;
 
 public class GetOrdersByUser {
-    private static final String pathGetOrders = "/api/orders";
+    private static final String PATH_GET_ORDERS = "/api/orders";
 
     @Step("Get orders by user")
     public ValidatableResponse getOrdersByUserRequest(String token) {
@@ -15,7 +15,7 @@ public class GetOrdersByUser {
                  // .log().all()
                 .auth().oauth2(token)
                 .when()
-                .get(baseURL + pathGetOrders)
+                .get(BASE_URL + PATH_GET_ORDERS)
                 .then();
                  //.log().all();
     }

@@ -24,7 +24,7 @@ public class GetOrdersUserTest {
     private GetOrdersByUser getOrdersByUser;
     private String token;
     private String bearerToken;
-    private final static String errorMessageNotAuthorised = "You should be authorised";
+    private final static String ERROR_MESSAGE_NOT_AUTHORISED = "You should be authorised";
 
     @Before
     public void beforeCreateUserTest(){
@@ -82,6 +82,6 @@ public class GetOrdersUserTest {
         int actualStatusCode = responseGetOrdersByUser.extract().statusCode();
         String actualMessage = responseGetOrdersByUser.extract().path("message");
         assertEquals("StatusCode is not 401", SC_UNAUTHORIZED, actualStatusCode);
-        assertEquals("Message is not correct", errorMessageNotAuthorised, actualMessage);
+        assertEquals("Message is not correct", ERROR_MESSAGE_NOT_AUTHORISED, actualMessage);
     }
 }

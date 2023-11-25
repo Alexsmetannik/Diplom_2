@@ -4,11 +4,11 @@ import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 
-import static config.Enviroment.baseURL;
+import static config.Enviroment.BASE_URL;
 import static io.restassured.RestAssured.given;
 
 public class UpdateUser {
-    private static final String pathUpdate = "/api/auth/user";
+    private static final String PATH_UPDATE = "/api/auth/user";
     public String email;
     public String password;
     public String name;
@@ -34,7 +34,7 @@ public class UpdateUser {
                 .contentType(ContentType.JSON)
                 .body(updateUser)
                 .when()
-                .patch(baseURL + pathUpdate)
+                .patch(BASE_URL + PATH_UPDATE)
                 .then();
                 // .log().all();
     }

@@ -24,7 +24,7 @@ public class UpdateUserTest {
     private String newEmail;
     private String newPassword;
     private String newName;
-    private final static String errorMessageNotAuthorised = "You should be authorised";
+    private final static String ERROR_MESSAGE_NOT_AUTHORISED = "You should be authorised";
 
     @Before
     public void beforeCreateUserTest(){
@@ -106,7 +106,7 @@ public class UpdateUserTest {
         int actualStatusCode = responseUpdate.extract().statusCode();
         String actualMessage = responseUpdate.extract().path("message");
         assertEquals("StatusCode is not 403", SC_UNAUTHORIZED, actualStatusCode);
-        assertEquals("Message is not correct", errorMessageNotAuthorised, actualMessage);
+        assertEquals("Message is not correct", ERROR_MESSAGE_NOT_AUTHORISED, actualMessage);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class UpdateUserTest {
         int actualStatusCode = responseUpdate.extract().statusCode();
         String actualMessage = responseUpdate.extract().path("message");
         assertEquals("StatusCode is not 403", SC_UNAUTHORIZED, actualStatusCode);
-        assertEquals("Message is not correct", errorMessageNotAuthorised, actualMessage);
+        assertEquals("Message is not correct", ERROR_MESSAGE_NOT_AUTHORISED, actualMessage);
     }
 
     @Test
@@ -130,6 +130,6 @@ public class UpdateUserTest {
         int actualStatusCode = responseUpdate.extract().statusCode();
         String actualMessage = responseUpdate.extract().path("message");
         assertEquals("StatusCode is not 403", SC_UNAUTHORIZED, actualStatusCode);
-        assertEquals("Message is not correct", errorMessageNotAuthorised, actualMessage);
+        assertEquals("Message is not correct", ERROR_MESSAGE_NOT_AUTHORISED, actualMessage);
     }
 }

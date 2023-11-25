@@ -17,8 +17,8 @@ public class CreateUserTest {
     private DeleteUser deleteUser;
     private String token;
     private String bearerToken;
-    private final static String errorMessageNotUnique = "User already exists";
-    private final static String errorMessageRequiredField = "Email, password and name are required fields";
+    private final static String ERROR_MESSAGE_NOT_UNIQUE = "User already exists";
+    private final static String ERROR_MESSAGE_REQUIRED_FIELD = "Email, password and name are required fields";
 
     @Before
     public void beforeCreateUserTest(){
@@ -70,7 +70,7 @@ public class CreateUserTest {
         int actualStatusCode = responseCreate.extract().statusCode();
         String actualMessage = responseCreate.extract().path("message");
         assertEquals("StatusCode is not 403", SC_FORBIDDEN, actualStatusCode);
-        assertEquals("Message is not correct", errorMessageNotUnique, actualMessage);
+        assertEquals("Message is not correct", ERROR_MESSAGE_NOT_UNIQUE, actualMessage);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class CreateUserTest {
         int actualStatusCode = responseCreate.extract().statusCode();
         String actualMessage = responseCreate.extract().path("message");
         assertEquals("StatusCode is not 403", SC_FORBIDDEN, actualStatusCode);
-        assertEquals("Message is not correct", errorMessageRequiredField, actualMessage);
+        assertEquals("Message is not correct", ERROR_MESSAGE_REQUIRED_FIELD, actualMessage);
     }
 
     @Test
@@ -94,7 +94,7 @@ public class CreateUserTest {
         int actualStatusCode = responseCreate.extract().statusCode();
         String actualMessage = responseCreate.extract().path("message");
         assertEquals("StatusCode is not 403", SC_FORBIDDEN, actualStatusCode);
-        assertEquals("Message is not correct", errorMessageRequiredField, actualMessage);
+        assertEquals("Message is not correct", ERROR_MESSAGE_REQUIRED_FIELD, actualMessage);
     }
 
     @Test
@@ -106,6 +106,6 @@ public class CreateUserTest {
         int actualStatusCode = responseCreate.extract().statusCode();
         String actualMessage = responseCreate.extract().path("message");
         assertEquals("StatusCode is not 403", SC_FORBIDDEN, actualStatusCode);
-        assertEquals("Message is not correct", errorMessageRequiredField, actualMessage);
+        assertEquals("Message is not correct", ERROR_MESSAGE_REQUIRED_FIELD, actualMessage);
     }
 }

@@ -5,10 +5,10 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 
 import static io.restassured.RestAssured.given;
-import static config.Enviroment.baseURL;
+import static config.Enviroment.BASE_URL;
 
 public class CreateUser {
-    private static final String pathCreate = "/api/auth/register";
+    private static final String PATH_CREATE = "/api/auth/register";
     public String email;
     public String password;
     public String name;
@@ -53,7 +53,7 @@ public class CreateUser {
                 .contentType(ContentType.JSON)
                 .body(createUser)
                 .when()
-                .post(baseURL + pathCreate)
+                .post(BASE_URL + PATH_CREATE)
                 .then();
                  //.log().all();
     }
